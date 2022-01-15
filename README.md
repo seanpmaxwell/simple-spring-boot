@@ -7,7 +7,7 @@
 - Create new project: `spring init --dependencies=web,data-jpa first-mvn`
 
 #### Install a JDBC (required to start server)
-- To avoid database setup, add this to main: `// @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class })`
+- To avoid database setup, add this to main: `@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class })`
 - To connect to PostgrSQL: https://www.codejava.net/frameworks/spring-boot/connect-to-postgresql-database-examples
 
 #### Starting application

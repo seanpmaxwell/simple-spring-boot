@@ -1,4 +1,4 @@
-package com.example.firstmvn.services;
+package com.example.firstmvn;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext;

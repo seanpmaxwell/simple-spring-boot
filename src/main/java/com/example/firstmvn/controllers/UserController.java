@@ -40,8 +40,8 @@ public class UserController {
      */
     @RequestMapping(value = "/users")
     public ResponseEntity<List<User>> users() {
-      var users = this.userService.getUsers();
-
+      List<User> users = this.userService.getUsers();
+      
       return new ResponseEntity<List<User>>(users, HttpStatus.OK);
     }
 }

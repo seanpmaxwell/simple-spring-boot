@@ -1,11 +1,11 @@
 package com.example.firstmvn;
 
+import com.example.firstmvn.other.ServerDetails;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
-// Use this option if you want to not install a jdbc
-// @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class })
 @SpringBootApplication()
 public class Main {
 

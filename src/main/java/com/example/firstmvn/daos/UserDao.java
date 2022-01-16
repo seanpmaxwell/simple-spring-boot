@@ -21,8 +21,7 @@ public class UserDao {
         var users = new ArrayList<User>();
         users.add(new User());
         users.add(new User());
-        users.add(new User("sean", "maxwell"));
-
+        users.add(new User("sean maxwell"));
         return users;
     }
 }

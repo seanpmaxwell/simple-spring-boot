@@ -12,6 +12,7 @@ import com.example.firstmvn.services.UserService;
 import java.util.List;
 
 import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -41,10 +42,24 @@ public class UserController {
      * 
      * @return
      */
-    @GetMapping(value = "/all")
+    @GetMapping("/all")
     public ResponseEntity<List<User>> getAll() {
         List<User> users = this.userService.getAll();
         return new ResponseEntity<List<User>>(users, HttpStatus.OK);
+    }
+
+
+    /**
+     * Find one user by id.
+     * 
+     * @param id
+     * @return
+     */
+    @GetMapping("{id}")
+    @ExceptionHandler({EntityNotFoundException.class})
+    public ResponseEntity<User> getOne(@PathVariable Long id) {
+        User user = this.userService.getOne(id);
+        return new ResponseEntity<User>(user, HttpStatus.OK);
     }
 
 

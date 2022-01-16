@@ -10,8 +10,10 @@ import com.example.firstmvn.entities.User;
 import com.example.firstmvn.repositories.IUserRepo;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -25,13 +27,29 @@ public class UserDao {
     
 
     /**
-     * Find a user by id
+     * Find a user by id.
+     * 
+     * @return
+     */
+    public List<User> getAll() {
+        return this.userRepo.findAll();
+    }
+
+
+    /**
+     * Find one user by id.
      * 
      * @param id
      * @return
      */
-    public List<User> getAll(int id) {
-        return this.userRepo.findAll();
+    public User getOne(Long id) {
+        Optional<User> resp = this.userRepo.findById(id);
+        if (resp.isPresent()) {
+            return resp.get();
+        } else {
+            String msg = "User with id \"" + id + "\" not found.";
+            throw new EntityNotFoundException(msg);
+        }
     }
 
 
@@ -45,7 +63,7 @@ public class UserDao {
         if (!exists) {
             this.userRepo.save(user);
         } else {
-            String msg = "User with id \"" + user.getId() + "\" already exists";
+            String msg = "User with id \"" + user.getId() + "\" already exists.";
             throw new EntityExistsException(msg);
         }
     }

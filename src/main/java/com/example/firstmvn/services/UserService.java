@@ -9,6 +9,7 @@ package com.example.firstmvn.services;
 import java.util.List;
 
 import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
 
 import com.example.firstmvn.daos.UserDao;
 import com.example.firstmvn.entities.User;
@@ -29,7 +30,18 @@ public class UserService {
      * @return
      */
     public List<User> getAll() {
-        return this.userDao.getAll(5);
+        return this.userDao.getAll();
+    }
+
+
+    /**
+     * Get one user by id.
+     * 
+     * @param id
+     * @return
+     */
+    public User getOne(Long id) throws EntityNotFoundException {
+        return this.userDao.getOne(id);
     }
 
 

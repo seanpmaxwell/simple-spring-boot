@@ -16,7 +16,20 @@ public class UserService {
     UserDao userDao;
     
 
-    public List<User> getUsers() {
-        return this.userDao.findById(5);
+    /**
+     * Get all users.
+     * 
+     * @return
+     */
+    public List<User> getAll() {
+        return this.userDao.getAll(5);
+    }
+
+
+    /**
+     * Add one user.
+     */
+    public void addOne(User user) {
+        this.userDao.addOne(user);
     }
 }

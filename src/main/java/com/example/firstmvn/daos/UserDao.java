@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 public class UserDao {
 
     @Autowired
-    private IUserRepo studentRepo;
+    private IUserRepo userRepo;
     
 
     /**
@@ -22,7 +22,20 @@ public class UserDao {
      * @param id
      * @return
      */
-    public List<User> findById(int id) {
-        return this.studentRepo.findAll();
+    public List<User> getAll(int id) {
+        return this.userRepo.findAll();
     }
+
+
+    /**
+     * Add one user.
+     * 
+     * @param user
+     */
+    public void addOne(User user) {
+        this.userRepo.save(user);
+    }
+
+
+    
 }

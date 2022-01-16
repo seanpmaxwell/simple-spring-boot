@@ -2,17 +2,40 @@ package com.example.firstmvn.entities;
 
 import java.sql.Date;
 
-import org.springframework.stereotype.Component;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+import lombok.Data;
 
 
-@Component
+@Entity
+@Table(name = "users")
 public class User {
     
-    Long id;
-    String email;
-    String name;
-    String pwdHash;
-    Date created;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @NotBlank
+    @Size(max = 50)
+    @Column(unique = true)
+    private String email;
+
+    @NotBlank
+    @Size(max = 50)
+    private String name;
+    
+    @Size(max = 50)
+    @Column(name = "pwdHash")
+    private String pwdHash;
+
+    @NotBlank
+    private Date created;
 
 
     public User() {
@@ -33,7 +56,13 @@ public class User {
     }
 
 
-    public User(Long id, String email, String name, String pwdHash, Date created) {
+    public User(
+        Long id,
+        String email,
+        String name,
+        String pwdHash,
+        Date created
+    ) {
         this.id = id;
         this.email = email;
         this.name = name;
@@ -79,5 +108,15 @@ public class User {
 
     public void setPwdHash(String pwdHash) {
         this.pwdHash = pwdHash;
+    }
+
+
+    public Date getCreated() {
+        return this.created;
+    }
+
+
+    public void setCreated(Date created) {
+        this.created = created;
     }
 }

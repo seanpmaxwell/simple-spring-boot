@@ -10,19 +10,4 @@ CREATE TABLE users (
 
 -- Create case-insensitive unique-constraint
 CREATE UNIQUE INDEX email_unique 
-   ON main.users( LOWER(email) );
-
--- First dummy user item
-INSERT INTO users (
-    "id",
-    "email",
-    "name",
-    "pwdHash",
-    "created"
-) VALUES (
-    1,
-    "initial.user.example.com",
-    "initial user",
-    "asdfasdf",
-    DATE.NOW()
-)
+   ON users( LOWER(email) );

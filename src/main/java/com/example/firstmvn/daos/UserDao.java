@@ -1,14 +1,20 @@
 package com.example.firstmvn.daos;
 
-import java.util.ArrayList;
+import com.example.firstmvn.entities.User;
+import com.example.firstmvn.repositories.IUserRepo;
+
 import java.util.List;
 
-import com.example.firstmvn.entities.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 
 @Repository
 public class UserDao {
+
+
+    @Autowired
+    private IUserRepo studentRepo;
     
 
     /**
@@ -18,10 +24,6 @@ public class UserDao {
      * @return
      */
     public List<User> findById(int id) {
-        var users = new ArrayList<User>();
-        users.add(new User());
-        users.add(new User());
-        users.add(new User("sean maxwell"));
-        return users;
+        return this.studentRepo.findAll();
     }
 }

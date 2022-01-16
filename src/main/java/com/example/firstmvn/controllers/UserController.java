@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 @SpringBootApplication
 public class UserController {
     
-
     @Autowired
     UserService userService;
     

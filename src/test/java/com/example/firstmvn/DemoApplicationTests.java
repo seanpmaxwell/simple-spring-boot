@@ -10,7 +10,6 @@ import org.springframework.test.context.ContextConfiguration;
 @ContextConfiguration(classes = ServletWebServerApplicationContext.class)
 class DemoApplicationTests {
 
-
 	@Test
 	void contextLoads() {
 	}

@@ -1,5 +1,9 @@
 # About
-This is basic app showing how to use Java 11 + Maven + Spring Boot + PostgrSQL + Flyway.
+This is simple project to show how to create a basic API using Java 11 + Maven + Spring Boot + PostgrSQL + Flyway.
+
+- Tutorials
+    - https://www.codejava.net/frameworks/spring-boot/connect-to-postgresql-database-examples
+    - https://www.techgeeknext.com/spring-boot/spring-boot-flyway-example
 
 
 #### Create new

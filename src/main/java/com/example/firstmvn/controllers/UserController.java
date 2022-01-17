@@ -71,6 +71,7 @@ public class UserController {
      */
     @PostMapping("")
     @ResponseBody
+    @ExceptionHandler({EntityExistsException.class})
     public String addOne(@RequestBody User user) {
         this.userService.addOne(user);
         return "Thanks For Posting!!";
@@ -85,7 +86,6 @@ public class UserController {
      */
     @PutMapping("")
     @ResponseBody
-    @ExceptionHandler({EntityExistsException.class})
     public String updateOne(@RequestBody User user) {
         this.userService.updateOne(user);
         return "Thanks for updating!!";

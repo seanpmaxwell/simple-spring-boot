@@ -14,7 +14,7 @@ import java.util.Optional;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
-
+import javax.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -58,7 +58,7 @@ public class UserDao {
      * 
      * @param user
      */
-    public void addOne(User user) {
+    public void addOne(User user) throws ConstraintViolationException{
         boolean exists = this.userRepo.existsById(user.getId());
         if (!exists) {
             this.userRepo.save(user);

@@ -6,13 +6,14 @@
 
 package com.example.firstmvn.services;
 
+import com.example.firstmvn.daos.UserDao;
+import com.example.firstmvn.entities.User;
+
 import java.util.List;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
-
-import com.example.firstmvn.daos.UserDao;
-import com.example.firstmvn.entities.User;
+import javax.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -48,7 +49,7 @@ public class UserService {
     /**
      * Add one user.
      */
-    public void addOne(User user) throws EntityExistsException {
+    public void addOne(User user) throws EntityExistsException, ConstraintViolationException {
         this.userDao.addOne(user);
     }
 

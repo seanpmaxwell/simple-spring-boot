@@ -13,6 +13,7 @@ import java.util.List;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
+import javax.validation.ConstraintViolationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -71,7 +72,7 @@ public class UserController {
      */
     @PostMapping("")
     @ResponseBody
-    @ExceptionHandler({EntityExistsException.class})
+    @ExceptionHandler({EntityExistsException.class, ConstraintViolationException.class})
     public String addOne(@RequestBody User user) {
         this.userService.addOne(user);
         return "Thanks For Posting!!";

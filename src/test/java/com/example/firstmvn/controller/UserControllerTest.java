@@ -12,6 +12,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -34,8 +35,7 @@ public class UserControllerTest {
     @MockBean
     private UserService userService;
 
-
-    private final User testUser = new User(5L, "sean");
+    private final User TEST_USER = new User(5L, "sean");
 
 
     /**
@@ -51,7 +51,7 @@ public class UserControllerTest {
         users.add(new User("Arnold Schwarzenegger"));
         users.add(new User("Sylvestor Stalone"));
         // Mock db call
-        when(userService.getAll()).thenReturn(users);
+        when(this.userService.getAll()).thenReturn(users);
         // Setup request
         var req = get("/api/users/all")
                     .contentType("application/json");
@@ -72,16 +72,16 @@ public class UserControllerTest {
      */
     @Test
     void getOne() throws Exception {
-        final Long id = this.testUser.getId();
+        final Long id = this.TEST_USER.getId();
         // Mock db call
-        when(userService.getOne(id)).thenReturn(this.testUser);
+        when(this.userService.getOne(id)).thenReturn(this.TEST_USER);
         // Setup req
         var req = get("/api/users/" + id)
                     .contentType("application/json");
         // Perform test
         mvc.perform(req)
             .andExpect(jsonPath("$.id").value(id))
-            .andExpect(jsonPath("$.name").value(this.testUser.getName()))
+            .andExpect(jsonPath("$.name").value(this.TEST_USER.getName()))
             .andExpect(status().isOk());
     }
 
@@ -94,11 +94,34 @@ public class UserControllerTest {
     @Test
     void addOne() throws Exception {
         // Setup dummy data
-        String content = this.asJsonString(this.testUser);
+        String content = this.asJsonString(this.TEST_USER);
         // Mock db call
-        doNothing().when(userService).addOne(any(User.class));
+        doNothing().when(this.userService).addOne(any(User.class));
         // Setup request
         var req = post("/api/users")
+                    .content(content)
+                    .contentType("application/json");
+        // Perform test 
+        mvc.perform(req)
+            .andExpect(status().isOk());
+    }
+
+    // TODO Need a test for user with id or email already exists
+
+
+    /**
+     * PUT "/api/users"
+     * 
+     * @throws Exception
+     */
+    @Test
+    void updateOne() throws Exception {
+        // Setup dummy data
+        String content = this.asJsonString(this.TEST_USER);
+        // Mock db call
+        doNothing().when(this.userService).updateOne(any(User.class));
+        // Setup request
+        var req = put("/api/users")
                     .content(content)
                     .contentType("application/json");
         // Perform test 

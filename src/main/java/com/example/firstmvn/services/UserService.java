@@ -49,7 +49,9 @@ public class UserService {
     /**
      * Add one user.
      */
-    public void addOne(User user) throws EntityExistsException, ConstraintViolationException {
+    public void addOne(User user)
+        throws EntityExistsException,
+            ConstraintViolationException {
         this.userDao.addOne(user);
     }
 

@@ -24,6 +24,9 @@ public class UserDao {
 
     @Autowired
     private IUserRepo userRepo;
+
+    private static final String ID_EXISTS_MSG_1 = "User with id \"";
+    private static final String ID_EXISTS_MSG_2 = "\" already exists.";
     
 
     /**
@@ -54,16 +57,16 @@ public class UserDao {
 
 
     /**
-     * Add one user.
+     * Add one user. ConstraintViolationException should handle email already persisting.
      * 
      * @param user
      */
-    public void addOne(User user) throws ConstraintViolationException{
+    public void addOne(User user) throws ConstraintViolationException {
         boolean exists = this.userRepo.existsById(user.getId());
         if (!exists) {
             this.userRepo.save(user);
         } else {
-            String msg = "User with id \"" + user.getId() + "\" already exists.";
+            String msg = UserDao.getIdExistsMessage(user.getId());
             throw new EntityExistsException(msg);
         }
     }
@@ -86,5 +89,14 @@ public class UserDao {
      */
     public void deleteOne(Long id) {
         this.userRepo.deleteById(id);
+    }
+
+
+    /**
+     * So the test classes can get the message
+     * @return
+     */
+    public static String getIdExistsMessage(Long id) {
+        return UserDao.ID_EXISTS_MSG_1 + id + UserDao.ID_EXISTS_MSG_2;
     }
 }

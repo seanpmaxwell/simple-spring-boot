@@ -14,8 +14,6 @@ import java.util.Optional;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
-import javax.validation.ConstraintViolationException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -106,6 +104,13 @@ public class UserDao {
      * @param id
      */
     public void deleteOne(Long id) {
+        // Check id not found
+        Optional<User> resp = this.userRepo.findById(id);
+        if (!resp.isPresent()) {
+            String msg = UserDao.getIdNotFoundMsg(id);
+            throw new EntityNotFoundException(msg);
+        }
+        // Delete by id
         this.userRepo.deleteById(id);
     }
 
@@ -116,7 +121,7 @@ public class UserDao {
      * @return
      */
     public static String getIdNotFoundMsg(Long id) {
-        return UserDao.ID_NOT_FOUND_MSG_1 + id + UserDao.ID_NOT_FOUND_MSG_2;
+        return ID_NOT_FOUND_MSG_1 + id + ID_NOT_FOUND_MSG_2;
     }
 
 
@@ -126,7 +131,7 @@ public class UserDao {
      * @return
      */
     public static String getAlreadyPersistsMsg(Long id, String email) {
-        return UserDao.ID_EXISTS_MSG + " [id: " + id + ", email: " + email + "]";
+        return ID_EXISTS_MSG + " [id: " + id + ", email: " + email + "]";
     }
 
 
@@ -137,6 +142,6 @@ public class UserDao {
      * @return
      */
     public static String getEmailAlreadyTakenMsg(String email) {
-        return UserDao.EMAIL_TAKEN_MSG_1 + email + UserDao.EMAIL_TAKEN_MSG_2;
+        return EMAIL_TAKEN_MSG_1 + email + EMAIL_TAKEN_MSG_2;
     }
 }

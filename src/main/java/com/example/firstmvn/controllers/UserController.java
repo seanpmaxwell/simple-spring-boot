@@ -36,9 +36,10 @@ public class UserController {
 
     private final Logger logger = LoggerFactory.getLogger(UserController.class);
   
-    private final String successfulPostMsg = "Thanks For Posting!!";
-    private final String successfulUpdateMsg = "Thanks for Updating!!";
-    
+    public final static String SUCCESSFUL_POST_MSG = "Thanks For Posting!!";
+    public final static String SUCCESSFUL_UPDATE_MSG = "Thanks for Updating!!";
+    public final static String SUCCESSFUL_DELETE_MSG = "Thanks for Deleting!!";
+
 
     /**
      * Fetch all users.
@@ -46,9 +47,13 @@ public class UserController {
      * @return
      */
     @GetMapping("/all")
-    public ResponseEntity<List<User>> getAll() {
-        List<User> users = this.userService.getAll();
-        return new ResponseEntity<List<User>>(users, HttpStatus.OK);
+    public ResponseEntity<Object> getAll() {
+        try {
+            List<User> users = this.userService.getAll();
+            return new ResponseEntity<Object>(users, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<Object>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
 
@@ -60,15 +65,13 @@ public class UserController {
      */
     @GetMapping("{id}")
     public ResponseEntity<Object> getOne(@PathVariable Long id) {
-        ResponseEntity<Object> response = null;
         try {
             User user = this.userService.getOne(id);
-            response = new ResponseEntity<Object>(user, HttpStatus.OK);
+            return new ResponseEntity<Object>(user, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
-            response = new ResponseEntity<Object>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<Object>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        return response;
     }
 
 
@@ -81,15 +84,13 @@ public class UserController {
     @PostMapping("")
     @ResponseBody
     public ResponseEntity<String> addOne(@RequestBody User user) {
-        ResponseEntity<String> response = null;
         try {
             this.userService.addOne(user);
-            response = new ResponseEntity<String>(this.successfulPostMsg, HttpStatus.OK);
+            return new ResponseEntity<String>(SUCCESSFUL_POST_MSG, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
-            response = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        return response;
     }
 
 
@@ -102,15 +103,13 @@ public class UserController {
     @PutMapping("")
     @ResponseBody
     public ResponseEntity<String> updateOne(@RequestBody User user) {
-        ResponseEntity<String> response = null;
         try {
             this.userService.updateOne(user);
-            response = new ResponseEntity<String>(this.successfulUpdateMsg, HttpStatus.OK);
+            return new ResponseEntity<String>(SUCCESSFUL_UPDATE_MSG, HttpStatus.OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
-            response = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        return response;
     }
 
 
@@ -122,8 +121,13 @@ public class UserController {
      */
     @DeleteMapping("/{id}")
     @ResponseBody
-    public String deleteOne(@PathVariable Long id) {
-        this.userService.deleteOne(id);
-        return "Thanks for deleting";
+    public ResponseEntity<String> deleteOne(@PathVariable Long id) {
+        try {
+            this.userService.deleteOne(id);
+            return new ResponseEntity<String>(SUCCESSFUL_DELETE_MSG, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 }

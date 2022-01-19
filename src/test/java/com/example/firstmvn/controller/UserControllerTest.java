@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -130,9 +131,10 @@ public class UserControllerTest {
         var req = post("/api/users")
                     .content(content)
                     .contentType("application/json");
-        // Perform test 
+        // Perform test
         this.mvc
             .perform(req)
+            .andExpect(content().string(UserController.SUCCESSFUL_POST_MSG))
             .andExpect(status().isOk());
     }
 
@@ -179,6 +181,7 @@ public class UserControllerTest {
         // Perform test 
         this.mvc
             .perform(req)
+            .andExpect(content().string(UserController.SUCCESSFUL_UPDATE_MSG))
             .andExpect(status().isOk());
     }
 
@@ -194,7 +197,7 @@ public class UserControllerTest {
         var content = this.asJsonString(this.TEST_USER);
         // Throw Error
         var errMsg = getIdNotFoundMsg(this.TEST_USER.getId());
-        var exception = new RuntimeException(errMsg);
+        var exception = new EntityNotFoundException(errMsg);
         doThrow(exception).when(this.userService).updateOne(any(User.class));
         // Setup request
         var req = put("/api/users")
@@ -223,6 +226,51 @@ public class UserControllerTest {
         // Setup request
         var req = put("/api/users")
                     .content(content)
+                    .contentType("application/json");
+        // Perform test 
+        this.mvc.perform(req)
+                .andExpect(content().string(errMsg))
+                .andExpect(status().isBadRequest());
+    }
+
+
+    /**
+     * DELETE "/api/users" 
+     * 
+     * @throws Exception
+     */
+    @Test
+    void deleteOne() throws Exception {
+        // Setup dummy data
+        Long id = this.TEST_USER.getId();
+        // Mock db call
+        doNothing().when(this.userService).deleteOne(id);
+        // Setup request
+        var req = delete("/api/users/" + id)
+                    .contentType("application/json");
+        // Perform test 
+        this.mvc
+            .perform(req)
+            .andExpect(content().string(UserController.SUCCESSFUL_DELETE_MSG))
+            .andExpect(status().isOk());
+    }
+
+
+    /**
+     * DELETE "/api/users" 
+     * 
+     * @throws Exception
+     */
+    @Test
+    void deleteOne_idNotFound() throws Exception {
+        // Setup dummy data
+        Long id = this.TEST_USER.getId();
+        // Throw Error
+        var errMsg = getIdNotFoundMsg(this.TEST_USER.getId());
+        var exception = new EntityNotFoundException(errMsg);
+        doThrow(exception).when(this.userService).deleteOne(id);
+        // Setup request
+        var req = delete("/api/users/" + id)
                     .contentType("application/json");
         // Perform test 
         this.mvc.perform(req)

@@ -71,7 +71,7 @@ public class UserService {
      * 
      * @param id
      */
-    public void deleteOne(Long id) {
+    public void deleteOne(Long id) throws EntityNotFoundException {
         this.userDao.deleteOne(id);
     }
 }

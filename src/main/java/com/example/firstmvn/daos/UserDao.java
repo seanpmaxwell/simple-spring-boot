@@ -26,7 +26,7 @@ public class UserDao {
 
     private static final String ID_NOT_FOUND_MSG_1 = "User with id \"";
     private static final String ID_NOT_FOUND_MSG_2 = "\" not found.";
-    private static final String ID_EXISTS_MSG = "User with that id and/or email already persists";
+    private static final String ADD_ERR_MSG = "User with that id and/or email already persists";
     private static final String EMAIL_TAKEN_MSG_1 = "Then email \"";
     private static final String EMAIL_TAKEN_MSG_2 = "\"has already been taken by another user.";
     
@@ -115,6 +115,10 @@ public class UserDao {
     }
 
 
+    /*****************************************************************************************
+     *                                       Helpers
+     ****************************************************************************************/
+    
     /**
      * Get message for id not found.
      * 
@@ -131,7 +135,7 @@ public class UserDao {
      * @return
      */
     public static String getAlreadyPersistsMsg(Long id, String email) {
-        return ID_EXISTS_MSG + " [id: " + id + ", email: " + email + "]";
+        return ADD_ERR_MSG + " [id: " + id + ", email: " + email + "]";
     }
 
 

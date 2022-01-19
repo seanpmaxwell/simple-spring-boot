@@ -13,7 +13,6 @@ import java.util.List;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
-import javax.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,9 +48,7 @@ public class UserService {
     /**
      * Add one user.
      */
-    public void addOne(User user)
-        throws EntityExistsException,
-            ConstraintViolationException {
+    public void addOne(User user) throws EntityExistsException {
         this.userDao.addOne(user);
     }
 

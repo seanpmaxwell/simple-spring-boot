@@ -9,9 +9,12 @@ import static com.example.firstmvn.daos.UserDao.getAlreadyPersistsMsg;
 import static com.example.firstmvn.daos.UserDao.getEmailAlreadyTakenMsg;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,17 +37,30 @@ import static org.mockito.Mockito.when;
 
 
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(controllers = UserController.class)
+@WebMvcTest(UserController.class)
 public class UserControllerTest {
+
+    User dummyUser;
+    List<User> dummyUsers;
     
     @Autowired
     private MockMvc mvc;
 
     @MockBean
     private UserService userService;
-
-
-    private final User TEST_USER = new User(5L, "sean");
+    
+    
+    /**
+     * Setup dummy-data
+     */
+    @BeforeEach
+    public void setUp() {
+        this.dummyUser = new User(5L, "sean");
+        this.dummyUsers = new ArrayList<User>();
+        this.dummyUsers.add(new User("Sean maxwell"));
+        this.dummyUsers.add(new User("Arnold Schwarzenegger"));
+        this.dummyUsers.add(new User("Sylvestor Stalone"));
+    }
 
 
     /**
@@ -54,11 +70,7 @@ public class UserControllerTest {
      */
     @Test
     void getAll() throws Exception {
-        // Setup dummy data
-        var users = new ArrayList<User>();
-        users.add(new User("Sean maxwell"));
-        users.add(new User("Arnold Schwarzenegger"));
-        users.add(new User("Sylvestor Stalone"));
+        var users = this.dummyUsers;
         // Mock db call
         when(this.userService.getAll()).thenReturn(users);
         // Setup request
@@ -81,16 +93,16 @@ public class UserControllerTest {
      */
     @Test
     void getOne() throws Exception {
-        final Long id = this.TEST_USER.getId();
+        final Long id = this.dummyUser.getId();
         // Mock db call
-        when(this.userService.getOne(id)).thenReturn(this.TEST_USER);
+        when(this.userService.getOne(id)).thenReturn(this.dummyUser);
         // Setup req
         var req = get("/api/users/" + id)
                     .contentType("application/json");
         // Perform test
         this.mvc.perform(req)
             .andExpect(jsonPath("$.id").value(id))
-            .andExpect(jsonPath("$.name").value(this.TEST_USER.getName()))
+            .andExpect(jsonPath("$.name").value(this.dummyUser.getName()))
             .andExpect(status().isOk());
     }
 
@@ -102,7 +114,7 @@ public class UserControllerTest {
      */
     @Test
     void getOne_idNotFound() throws Exception {
-        final Long id = this.TEST_USER.getId();
+        final Long id = this.dummyUser.getId();
         var errMsg = getIdNotFoundMsg(id);
         var exception = new EntityNotFoundException(errMsg);
         doThrow(exception).when(this.userService).getOne(id);
@@ -124,7 +136,7 @@ public class UserControllerTest {
     @Test
     void addOne() throws Exception {
         // Setup dummy data
-        String content = this.asJsonString(this.TEST_USER);
+        String content = this.asJsonString(this.dummyUser);
         // Mock db call
         doNothing().when(this.userService).addOne(any(User.class));
         // Setup request
@@ -147,9 +159,9 @@ public class UserControllerTest {
     @Test
     void addOne_alreadyPersistsErr() throws Exception {
         // Setup dummy data
-        var content = this.asJsonString(this.TEST_USER);
+        var content = this.asJsonString(this.dummyUser);
         // Throw Error
-        var errMsg = getAlreadyPersistsMsg(this.TEST_USER.getId(), this.TEST_USER.getEmail());
+        var errMsg = getAlreadyPersistsMsg(this.dummyUser.getId(), this.dummyUser.getEmail());
         var exception = new EntityExistsException(errMsg);
         doThrow(exception).when(this.userService).addOne(any(User.class));
         // Setup request
@@ -171,7 +183,7 @@ public class UserControllerTest {
     @Test
     void updateOne() throws Exception {
         // Setup dummy data
-        String content = this.asJsonString(this.TEST_USER);
+        String content = this.asJsonString(this.dummyUser);
         // Mock db call
         doNothing().when(this.userService).updateOne(any(User.class));
         // Setup request
@@ -194,9 +206,9 @@ public class UserControllerTest {
     @Test 
     void updateOne_idNotFound() throws Exception {
         // Setup dummy data
-        var content = this.asJsonString(this.TEST_USER);
+        var content = this.asJsonString(this.dummyUser);
         // Throw Error
-        var errMsg = getIdNotFoundMsg(this.TEST_USER.getId());
+        var errMsg = getIdNotFoundMsg(this.dummyUser.getId());
         var exception = new EntityNotFoundException(errMsg);
         doThrow(exception).when(this.userService).updateOne(any(User.class));
         // Setup request
@@ -218,9 +230,9 @@ public class UserControllerTest {
     @Test 
     void updateOne_emailTaken() throws Exception {
         // Setup dummy data
-        var content = this.asJsonString(this.TEST_USER);
+        var content = this.asJsonString(this.dummyUser);
         // Throw Error
-        var errMsg = getEmailAlreadyTakenMsg(this.TEST_USER.getEmail());
+        var errMsg = getEmailAlreadyTakenMsg(this.dummyUser.getEmail());
         var exception = new RuntimeException(errMsg);
         doThrow(exception).when(this.userService).updateOne(any(User.class));
         // Setup request
@@ -242,7 +254,7 @@ public class UserControllerTest {
     @Test
     void deleteOne() throws Exception {
         // Setup dummy data
-        Long id = this.TEST_USER.getId();
+        Long id = this.dummyUser.getId();
         // Mock db call
         doNothing().when(this.userService).deleteOne(id);
         // Setup request
@@ -264,9 +276,9 @@ public class UserControllerTest {
     @Test
     void deleteOne_idNotFound() throws Exception {
         // Setup dummy data
-        Long id = this.TEST_USER.getId();
+        Long id = this.dummyUser.getId();
         // Throw Error
-        var errMsg = getIdNotFoundMsg(this.TEST_USER.getId());
+        var errMsg = getIdNotFoundMsg(this.dummyUser.getId());
         var exception = new EntityNotFoundException(errMsg);
         doThrow(exception).when(this.userService).deleteOne(id);
         // Setup request

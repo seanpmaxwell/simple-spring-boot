@@ -25,6 +25,8 @@ public class UserDao {
     @Autowired
     private IUserRepo userRepo;
 
+    private static final String ID_NOT_FOUND_MSG_1 = "User with id \"";
+    private static final String ID_NOT_FOUND_MSG_2 = "\" not found.";
     private static final String ID_EXISTS_MSG_1 = "User with id \"";
     private static final String ID_EXISTS_MSG_2 = "\" already exists.";
     
@@ -50,7 +52,7 @@ public class UserDao {
         if (resp.isPresent()) {
             return resp.get();
         } else {
-            String msg = "User with id \"" + id + "\" not found.";
+            String msg = UserDao.getIdNotFoundMsg(id);
             throw new EntityNotFoundException(msg);
         }
     }
@@ -66,7 +68,7 @@ public class UserDao {
         if (!exists) {
             this.userRepo.save(user);
         } else {
-            String msg = UserDao.getIdExistsMessage(user.getId());
+            String msg = UserDao.getIdExistsMsg(user.getId());
             throw new EntityExistsException(msg);
         }
     }
@@ -78,6 +80,7 @@ public class UserDao {
      * @param user
      */
     public void updateOne(User user) {
+        // TODO maybe need an entity not found exception here
         this.userRepo.updateOne(user.getId(), user.getEmail(), user.getName(), user.getPwdHash());
     }
 
@@ -96,7 +99,16 @@ public class UserDao {
      * So the test classes can get the message
      * @return
      */
-    public static String getIdExistsMessage(Long id) {
+    public static String getIdNotFoundMsg(Long id) {
+        return UserDao.ID_NOT_FOUND_MSG_1 + id + UserDao.ID_NOT_FOUND_MSG_2;
+    }
+
+
+    /**
+     * So the test classes can get the message
+     * @return
+     */
+    public static String getIdExistsMsg(Long id) {
         return UserDao.ID_EXISTS_MSG_1 + id + UserDao.ID_EXISTS_MSG_2;
     }
 }

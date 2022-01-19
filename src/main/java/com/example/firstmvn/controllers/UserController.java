@@ -12,14 +12,13 @@ import com.example.firstmvn.services.UserService;
 import java.util.List;
 
 import javax.persistence.EntityExistsException;
-import javax.persistence.EntityNotFoundException;
-import javax.validation.ConstraintViolationException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,6 +32,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
+
+    private final Logger logger = LoggerFactory.getLogger(UserController.class);
   
     @Autowired
     UserService userService;
@@ -57,10 +58,16 @@ public class UserController {
      * @return
      */
     @GetMapping("{id}")
-    @ExceptionHandler({EntityNotFoundException.class})
-    public ResponseEntity<User> getOne(@PathVariable Long id) {
-        User user = this.userService.getOne(id);
-        return new ResponseEntity<User>(user, HttpStatus.OK);
+    public ResponseEntity<Object> getOne(@PathVariable Long id) {
+        ResponseEntity<Object> response = null;
+        try {
+            User user = this.userService.getOne(id);
+            response = new ResponseEntity<Object>(user, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error("Invalid Input:", e.getMessage());
+            return new ResponseEntity<Object>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return response;
     }
 
 
@@ -72,8 +79,7 @@ public class UserController {
      */
     @PostMapping("")
     @ResponseBody
-    @ExceptionHandler({EntityExistsException.class, ConstraintViolationException.class})
-    public String addOne(@RequestBody User user) {
+    public String addOne(EntityExistsException e, @RequestBody User user) {
         this.userService.addOne(user);
         return "Thanks For Posting!!";
     }

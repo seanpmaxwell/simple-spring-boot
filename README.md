@@ -27,4 +27,4 @@ This is simple project to show how to create a basic API using Java 11 + Maven +
 
 
 #### Organization
-- Controller (@RestController) -> Service (@Service) -> Dao (@Repository) -> Entity (@Component)
+- Controller (@RestController) -> Service (@Service) -> Dao (@Repository) -> Repo (@Repository) -> Entity (@Component)

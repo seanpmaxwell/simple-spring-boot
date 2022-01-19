@@ -61,7 +61,7 @@ public class UserService {
      * 
      * @param user
      */
-    public void updateOne(User user) {
+    public void updateOne(User user) throws RuntimeException {
         this.userDao.updateOne(user);
     }
 

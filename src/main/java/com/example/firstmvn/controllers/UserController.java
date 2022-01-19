@@ -11,8 +11,6 @@ import com.example.firstmvn.services.UserService;
 
 import java.util.List;
 
-import javax.persistence.EntityExistsException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,10 +31,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/users")
 public class UserController {
 
-    private final Logger logger = LoggerFactory.getLogger(UserController.class);
-  
     @Autowired
     UserService userService;
+
+    private final Logger logger = LoggerFactory.getLogger(UserController.class);
+  
+    private final String successfulPostMsg = "Thanks For Posting!!";
+    private final String successfulUpdateMsg = "Thanks for Updating!!";
     
 
     /**
@@ -64,8 +65,8 @@ public class UserController {
             User user = this.userService.getOne(id);
             response = new ResponseEntity<Object>(user, HttpStatus.OK);
         } catch (Exception e) {
-            logger.error("Invalid Input:", e.getMessage());
-            return new ResponseEntity<Object>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            logger.error(e.getMessage());
+            response = new ResponseEntity<Object>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
         return response;
     }
@@ -79,9 +80,16 @@ public class UserController {
      */
     @PostMapping("")
     @ResponseBody
-    public String addOne(EntityExistsException e, @RequestBody User user) {
-        this.userService.addOne(user);
-        return "Thanks For Posting!!";
+    public ResponseEntity<String> addOne(@RequestBody User user) {
+        ResponseEntity<String> response = null;
+        try {
+            this.userService.addOne(user);
+            response = new ResponseEntity<String>(this.successfulPostMsg, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            response = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return response;
     }
 
 
@@ -93,9 +101,16 @@ public class UserController {
      */
     @PutMapping("")
     @ResponseBody
-    public String updateOne(@RequestBody User user) {
-        this.userService.updateOne(user);
-        return "Thanks for updating!!";
+    public ResponseEntity<String> updateOne(@RequestBody User user) {
+        ResponseEntity<String> response = null;
+        try {
+            this.userService.updateOne(user);
+            response = new ResponseEntity<String>(this.successfulUpdateMsg, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            response = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return response;
     }
 
 

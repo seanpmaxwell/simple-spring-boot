@@ -7,6 +7,8 @@
 
 package com.example.firstmvn.repositories;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import com.example.firstmvn.entities.User;
@@ -20,6 +22,25 @@ import org.springframework.stereotype.Repository;
 @Repository
 @Transactional
 public interface IUserRepo extends JpaRepository<User, Long> {
+
+
+    /**
+     * Find by id or email.
+     * 
+     * @param id
+     * @param email
+     * @return
+     */
+    List<User> findByIdOrEmail(Long id, String email);
+
+
+    /**
+     * Find a user by there email.
+     * 
+     * @param email
+     * @return
+     */
+    User findByEmail(String email);
     
 
     /**

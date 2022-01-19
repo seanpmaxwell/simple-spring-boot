@@ -5,8 +5,11 @@ import com.example.firstmvn.entities.User;
 import com.example.firstmvn.services.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import static com.example.firstmvn.daos.UserDao.getIdNotFoundMsg;
+import static com.example.firstmvn.daos.UserDao.getAlreadyPersistsMsg;
+import static com.example.firstmvn.daos.UserDao.getEmailAlreadyTakenMsg;
 
 import java.util.ArrayList;
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 
 import org.junit.jupiter.api.Test;
@@ -134,34 +137,28 @@ public class UserControllerTest {
     }
 
 
-    // /**
-    //  * Test for the exception when a user with the id already exists.
-    //  * 
-    //  * @throws Exception
-    //  */
-    // @Test
-    // void addOne_idAlreadyExists() throws Exception {
-    //     // Setup dummy data
-    //     var content = this.asJsonString(this.TEST_USER);
-    //     // Throw Error
-    //     var errMsg = getIdExistsMessage(this.TEST_USER.getId());
-    //     var exception = new EntityExistsException(errMsg);
-    //     doThrow(exception).when(this.userService).addOne(any(User.class));
-    //     // Setup request
-    //     var req = post("/api/users")
-    //                 .content(content)
-    //                 .contentType("application/json");
-    //     // Perform test 
-    //     var err = status().isInternalServerError();
-    //     assertThatThrownBy(() ->  this.mvc.perform(req).andExpect(err))
-    //         .hasCause(new EntityExistsException(errMsg));
-    // }
-
-
-    // TODO Fix this 
-    // There is an issue with how you are handling exceptions
-    
-    // TODO exception when email exists
+    /**
+     * Test for the exception when a user with the id already exists.
+     * 
+     * @throws Exception
+     */        
+    @Test
+    void addOne_alreadyPersistsErr() throws Exception {
+        // Setup dummy data
+        var content = this.asJsonString(this.TEST_USER);
+        // Throw Error
+        var errMsg = getAlreadyPersistsMsg(this.TEST_USER.getId(), this.TEST_USER.getEmail());
+        var exception = new EntityExistsException(errMsg);
+        doThrow(exception).when(this.userService).addOne(any(User.class));
+        // Setup request
+        var req = post("/api/users")
+                    .content(content)
+                    .contentType("application/json");
+        // Perform test 
+        this.mvc.perform(req)
+                .andExpect(content().string(errMsg))
+                .andExpect(status().isBadRequest());
+    }
 
 
     /**
@@ -183,6 +180,54 @@ public class UserControllerTest {
         this.mvc
             .perform(req)
             .andExpect(status().isOk());
+    }
+
+
+    /**
+     * PUT "/api/users" id not found.
+     * 
+     * @throws Exception
+     */
+    @Test 
+    void updateOne_idNotFound() throws Exception {
+        // Setup dummy data
+        var content = this.asJsonString(this.TEST_USER);
+        // Throw Error
+        var errMsg = getIdNotFoundMsg(this.TEST_USER.getId());
+        var exception = new RuntimeException(errMsg);
+        doThrow(exception).when(this.userService).updateOne(any(User.class));
+        // Setup request
+        var req = put("/api/users")
+                    .content(content)
+                    .contentType("application/json");
+        // Perform test 
+        this.mvc.perform(req)
+                .andExpect(content().string(errMsg))
+                .andExpect(status().isBadRequest());
+    }
+
+
+    /**
+     * PUT "/api/users" email already taken
+     * 
+     * @throws Exception
+     */
+    @Test 
+    void updateOne_emailTaken() throws Exception {
+        // Setup dummy data
+        var content = this.asJsonString(this.TEST_USER);
+        // Throw Error
+        var errMsg = getEmailAlreadyTakenMsg(this.TEST_USER.getEmail());
+        var exception = new RuntimeException(errMsg);
+        doThrow(exception).when(this.userService).updateOne(any(User.class));
+        // Setup request
+        var req = put("/api/users")
+                    .content(content)
+                    .contentType("application/json");
+        // Perform test 
+        this.mvc.perform(req)
+                .andExpect(content().string(errMsg))
+                .andExpect(status().isBadRequest());
     }
 
 

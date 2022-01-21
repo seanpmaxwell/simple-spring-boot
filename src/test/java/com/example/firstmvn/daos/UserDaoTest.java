@@ -47,7 +47,7 @@ public class UserDaoTest {
 
 
     /**
-     * Setup dummy-data
+     * Setup dummy-data.
      */
     @BeforeEach
     public void setUp() {

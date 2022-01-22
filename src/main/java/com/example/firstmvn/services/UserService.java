@@ -47,6 +47,9 @@ public class UserService {
 
     /**
      * Add one user.
+     * 
+     * @param user
+     * @throws EntityExistsException
      */
     public void addOne(User user) throws EntityExistsException {
         this.userDao.addOne(user);

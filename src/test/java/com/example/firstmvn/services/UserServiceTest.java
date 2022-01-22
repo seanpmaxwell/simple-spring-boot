@@ -1,5 +1,6 @@
 /**
  * Unit-tests for the user service.
+ * Example from here: https://howtodoinjava.com/spring-boot2/testing/spring-boot-2-junit-5/
  * 
  * created by Sean Maxwell, 1/19/2022
  */
@@ -20,9 +21,10 @@ import javax.persistence.EntityNotFoundException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -33,16 +35,16 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 
-@WebMvcTest(UserService.class)
+@ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
 
-    User dummyUser;
-    List<User> dummyUsers;
+    private User dummyUser;
+    private List<User> dummyUsers;
     
-    @Autowired
+    @InjectMocks
     private UserService userService;
 
-    @MockBean
+    @Mock
     private UserDao userDao;
 
 

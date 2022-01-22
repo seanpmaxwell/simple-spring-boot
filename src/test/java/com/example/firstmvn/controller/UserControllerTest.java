@@ -1,3 +1,10 @@
+/**
+ * Unit-tests for the user controller. Example taken from here:
+ * https://howtodoinjava.com/spring-boot2/testing/spring-boot-2-junit-5/.
+ * 
+ * created by Sean Maxwell, 1/20/2022
+ */
+
 package com.example.firstmvn.controller;
 
 import com.example.firstmvn.controllers.UserController;
@@ -16,9 +23,11 @@ import javax.persistence.EntityNotFoundException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -35,10 +44,11 @@ import static org.mockito.Mockito.when;
 
 
 @WebMvcTest(UserController.class)
+@ExtendWith(SpringExtension.class)
 public class UserControllerTest {
 
-    User dummyUser;
-    List<User> dummyUsers;
+    private User dummyUser;
+    private List<User> dummyUsers;
     
     @Autowired
     private MockMvc mvc;

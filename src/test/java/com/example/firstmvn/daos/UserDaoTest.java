@@ -21,9 +21,10 @@ import javax.persistence.EntityNotFoundException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -32,17 +33,17 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 
-@WebMvcTest(UserDao.class)
+@ExtendWith(MockitoExtension.class)
 public class UserDaoTest {
 
-    User dummyUser;
-    List<User> dummyUsers;
-    List<User> persistingUser;
+    private User dummyUser;
+    private List<User> dummyUsers;
+    private List<User> persistingUser;
     
-    @Autowired
+    @InjectMocks
     private UserDao userDao;
 
-    @MockBean
+    @Mock
     private IUserRepo userRepo;
 
 

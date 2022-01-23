@@ -76,6 +76,15 @@ public class User {
     }
 
 
+    public User(String email, String name) {
+        this.id = -1L;
+        this.email = email;
+        this.name = name;
+        this.pwdHash = "";
+        this.created = new Date(System.currentTimeMillis());
+    }
+
+
     public User(
         Long id,
         String email,

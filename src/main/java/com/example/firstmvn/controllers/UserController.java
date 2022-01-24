@@ -33,7 +33,7 @@ public class UserController {
 
     UserService userService;
 
-    private final Logger logger = LoggerFactory.getLogger(UserController.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(UserController.class);
   
     public final static String SUCCESSFUL_POST_MSG = "Thanks For Posting!!";
     public final static String SUCCESSFUL_UPDATE_MSG = "Thanks for Updating!!";
@@ -57,6 +57,7 @@ public class UserController {
             List<User> users = this.userService.getAll();
             return new ResponseEntity<Object>(users, HttpStatus.OK);
         } catch (Exception e) {
+            LOGGER.error(e.getMessage());
             return new ResponseEntity<Object>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -74,7 +75,7 @@ public class UserController {
             User user = this.userService.getOne(id);
             return new ResponseEntity<Object>(user, HttpStatus.OK);
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            LOGGER.error(e.getMessage());
             return new ResponseEntity<Object>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -93,7 +94,7 @@ public class UserController {
             this.userService.addOne(user);
             return new ResponseEntity<String>(SUCCESSFUL_POST_MSG, HttpStatus.OK);
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            LOGGER.error(e.getMessage());
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -112,7 +113,7 @@ public class UserController {
             this.userService.updateOne(user);
             return new ResponseEntity<String>(SUCCESSFUL_UPDATE_MSG, HttpStatus.OK);
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            LOGGER.error(e.getMessage());
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -131,7 +132,7 @@ public class UserController {
             this.userService.deleteOne(id);
             return new ResponseEntity<String>(SUCCESSFUL_DELETE_MSG, HttpStatus.OK);
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            LOGGER.error(e.getMessage());
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }

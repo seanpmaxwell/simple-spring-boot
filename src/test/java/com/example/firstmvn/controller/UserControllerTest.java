@@ -18,13 +18,13 @@ import static com.example.firstmvn.daos.UserDao.getEmailAlreadyTakenMsg;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -50,11 +50,16 @@ public class UserControllerTest {
     private User dummyUser;
     private List<User> dummyUsers;
     
-    @Autowired
     private MockMvc mvc;
 
     @MockBean
     private UserService userService;
+
+
+    @Inject
+    public void setMvc(MockMvc mvc) {
+        this.mvc = mvc;
+    }
     
 
     /**

@@ -12,16 +12,16 @@ import com.example.firstmvn.repositories.IUserRepo;
 import java.util.List;
 import java.util.Optional;
 
+import javax.inject.Inject;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Repository;
 
 
 @Repository
 public class UserDao {
 
-    @Autowired
     private IUserRepo userRepo;
 
     private static final String ID_NOT_FOUND_MSG_1 = "User with id \"";
@@ -29,6 +29,12 @@ public class UserDao {
     private static final String ADD_ERR_MSG = "User with that id and/or email already persists";
     private static final String EMAIL_TAKEN_MSG_1 = "Then email \"";
     private static final String EMAIL_TAKEN_MSG_2 = "\"has already been taken by another user.";
+
+
+    @Inject
+    public void setUserRep(IUserRepo userRepo) {
+        this.userRepo = userRepo;
+    }
     
 
     /**

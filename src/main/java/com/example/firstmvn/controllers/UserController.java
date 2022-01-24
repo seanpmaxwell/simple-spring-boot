@@ -10,10 +10,10 @@ import com.example.firstmvn.entities.User;
 import com.example.firstmvn.services.UserService;
 
 import java.util.List;
+import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,7 +31,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/users")
 public class UserController {
 
-    @Autowired
     UserService userService;
 
     private final Logger logger = LoggerFactory.getLogger(UserController.class);
@@ -39,6 +38,12 @@ public class UserController {
     public final static String SUCCESSFUL_POST_MSG = "Thanks For Posting!!";
     public final static String SUCCESSFUL_UPDATE_MSG = "Thanks for Updating!!";
     public final static String SUCCESSFUL_DELETE_MSG = "Thanks for Deleting!!";
+
+
+    @Inject
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
 
 
     /**

@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.inject.Inject;
+
 import com.example.firstmvn.Main;
 import com.example.firstmvn.controllers.UserController;
 import com.example.firstmvn.entities.User;
@@ -23,7 +25,6 @@ import static com.example.firstmvn.daos.UserDao.getEmailAlreadyTakenMsg;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext;
 import org.springframework.http.ResponseEntity;
@@ -41,14 +42,24 @@ public class UserIntegrationTests {
     private List<User> dummyUsers;
     private User savedUser;
     private User dummyUser;
+
     private final String DUMMY_EMAIL = "foo@bar.com";
     private final String DUMMY_NAME = "foo bar";
 
-    @Autowired
     private UserController userController;
-
-    @Autowired
     private IUserRepo userRepo;
+
+
+    @Inject
+    public void setUserController(UserController userController) {
+        this.userController = userController;
+    }
+
+    
+    @Inject
+    public void setUserRepo(IUserRepo userRepo) {
+        this.userRepo = userRepo;
+    }
 
 
     /**

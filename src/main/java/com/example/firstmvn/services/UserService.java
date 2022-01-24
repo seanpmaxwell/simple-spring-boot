@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService {
     
-    UserDao userDao;
+    private UserDao userDao;
 
 
     @Inject

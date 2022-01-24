@@ -15,11 +15,13 @@ import java.util.Optional;
 import javax.inject.Inject;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Repository;
 
 
 @Repository
+@Transactional
 public class UserDao {
 
     private IUserRepo userRepo;

@@ -11,6 +11,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 // import lombok.Data;
 // import lombok.ToString;
 
@@ -37,6 +39,7 @@ public class User {
     private String pwdHash;
 
     @NotBlank
+    @CreationTimestamp
     private Date created;
 
 

@@ -185,7 +185,7 @@ public class UserIntegrationTests {
     @Test 
     void updateOne_emailTaken() {
         User user = this.savedUser;
-        user.setEmail(this.dummyUsers.get(0).getEmail());
+        user.setEmail(this.dummyUsers.get(1).getEmail());
         ResponseEntity<String> resp = this.userController.updateOne(user);
         String body = (String)resp.getBody();
         String msg = getEmailAlreadyTakenMsg(user.getEmail());

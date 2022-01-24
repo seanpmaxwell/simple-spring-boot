@@ -30,8 +30,8 @@ This is simple project to show how to create a basic API using Java 11 + Maven +
 - Controller (@RestController) -> Service (@Service) -> Dao (@Repository) -> Repo (@Repository) -> Entity (@Component)
 
 
-#### Todo
+#### Todo (maybe)
 - Maybe setup testContainers for creating a test database.
 https://www.baeldung.com/spring-boot-testcontainers-integration-test
 
-- Setup @ControllerAdvice instead of using try/catch blocks in controllers
+- Setup custom exceptions (i.e. email not found exception) and use @ControllerAdvice instead of using try/catch blocks in controllers

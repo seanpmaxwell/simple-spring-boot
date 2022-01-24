@@ -49,7 +49,6 @@ public class UserControllerTest {
 
     private User dummyUser;
     private List<User> dummyUsers;
-    
     private MockMvc mvc;
 
     @MockBean

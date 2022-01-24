@@ -28,3 +28,8 @@ This is simple project to show how to create a basic API using Java 11 + Maven +
 
 #### Organization
 - Controller (@RestController) -> Service (@Service) -> Dao (@Repository) -> Repo (@Repository) -> Entity (@Component)
+
+
+#### Todo
+Maybe setup testContainers for creating a test database.
+https://www.baeldung.com/spring-boot-testcontainers-integration-test

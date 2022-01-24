@@ -34,4 +34,4 @@ This is simple project to show how to create a basic API using Java 11 + Maven +
 - Maybe setup testContainers for creating a test database.
 https://www.baeldung.com/spring-boot-testcontainers-integration-test
 
-- Setup custom exceptions (i.e. email not found exception) and use @ControllerAdvice instead of using try/catch blocks in controllers
+- Use @ControllerAdvice instead of using try/catch blocks in controllers

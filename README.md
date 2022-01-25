@@ -33,3 +33,5 @@ This is simple project to show how to create a basic API using Java 11 + Maven +
 #### Todo (maybe)
 - Maybe setup testContainers for creating a test database.
 https://www.baeldung.com/spring-boot-testcontainers-integration-test
+
+- Integration tests need a web environment, not to call controllers methods directly

@@ -12,11 +12,11 @@ import com.example.firstmvn.repositories.IUserRepo;
 import java.util.List;
 import java.util.Optional;
 
-import javax.inject.Inject;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 
@@ -29,12 +29,17 @@ public class UserDao {
     private static final String ID_NOT_FOUND_MSG_1 = "User with id \"";
     private static final String ID_NOT_FOUND_MSG_2 = "\" not found.";
     private static final String ADD_ERR_MSG = "User with that id and/or email already persists";
-    private static final String EMAIL_TAKEN_MSG_1 = "Then email \"";
-    private static final String EMAIL_TAKEN_MSG_2 = "\"has already been taken by another user.";
+    private static final String EMAIL_TAKEN_MSG_1 = "The email \"";
+    private static final String EMAIL_TAKEN_MSG_2 = "\" has already been taken by another user.";
 
 
-    @Inject
-    public void setUserRep(IUserRepo userRepo) {
+    /**
+     * Constructor()
+     * 
+     * @param userRepo
+     */
+    @Autowired
+    public UserDao(IUserRepo userRepo) {
         this.userRepo = userRepo;
     }
     

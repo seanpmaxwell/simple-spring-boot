@@ -10,21 +10,26 @@ import com.example.firstmvn.daos.UserDao;
 import com.example.firstmvn.entities.User;
 
 import java.util.List;
-import javax.inject.Inject;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
 @Service
 public class UserService {
     
-    private UserDao userDao;
+    private final UserDao userDao;
 
 
-    @Inject
-    public void setUserDao(UserDao userDao) {
+    /**
+     * Constructor()
+     * 
+     * @param userDao
+     */
+    @Autowired
+    public UserService(UserDao userDao) {
         this.userDao = userDao;
     }
     

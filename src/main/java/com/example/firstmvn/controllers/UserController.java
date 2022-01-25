@@ -10,8 +10,8 @@ import com.example.firstmvn.entities.User;
 import com.example.firstmvn.services.UserService;
 
 import java.util.List;
-import javax.inject.Inject;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,16 +29,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/users")
 public class UserController {
 
-    private UserService userService;
-    
+    private final UserService userService;
   
     public final static String SUCCESSFUL_POST_MSG = "Thanks For Posting!!";
     public final static String SUCCESSFUL_UPDATE_MSG = "Thanks for Updating!!";
     public final static String SUCCESSFUL_DELETE_MSG = "Thanks for Deleting!!";
 
 
-    @Inject
-    public void setUserService(UserService userService) {
+    /**
+     * Constructor()
+     * 
+     * @param userService
+     */
+    @Autowired
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 

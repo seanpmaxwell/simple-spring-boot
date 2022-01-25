@@ -1,7 +1,6 @@
 package com.example.firstmvn.other;
 
-import javax.inject.Inject;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext;
 import org.springframework.stereotype.Component;
 
@@ -9,11 +8,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class ServerDetails {
 
-    private ServletWebServerApplicationContext server;
+    private final ServletWebServerApplicationContext server;
 
 
-    @Inject
-    public void setServer(ServletWebServerApplicationContext server) {
+    /**
+     * Constructor()
+     * 
+     * @param server
+     */
+    @Autowired
+    public ServerDetails(ServletWebServerApplicationContext server) {
         this.server = server;
     }
 

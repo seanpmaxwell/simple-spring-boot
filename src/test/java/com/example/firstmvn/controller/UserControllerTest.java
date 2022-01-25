@@ -47,9 +47,10 @@ import static org.mockito.Mockito.when;
 @ExtendWith(SpringExtension.class)
 public class UserControllerTest {
 
+    private final MockMvc mvc;
+
     private User dummyUser;
     private List<User> dummyUsers;
-    private MockMvc mvc;
 
     @MockBean
     private UserService userService;

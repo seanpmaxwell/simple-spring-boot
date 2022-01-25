@@ -11,8 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import javax.inject.Inject;
-
 import com.example.firstmvn.Main;
 import com.example.firstmvn.controllers.UserController;
 import com.example.firstmvn.entities.User;
@@ -40,6 +38,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -54,25 +53,23 @@ public class UserIntegrationTests {
     private final String DUMMY_EMAIL = "foo@bar.com";
     private final String DUMMY_NAME = "foo bar";
 
+    private final IUserRepo userRepo;
+
     private List<User> dummyUsers;
     private User savedUser;
     private User unsavedUser;
 
-    // private UserController userController;
-    private IUserRepo userRepo;
-
     @Autowired
 	private MockMvc mvc;
 
-
-    // @Inject
-    // public void setUserController(UserController userController) {
-    //     this.userController = userController;
-    // }
-
     
-    @Inject
-    public void setUserRepo(IUserRepo userRepo) {
+    /**
+     * Constructor()
+     * 
+     * @param userRepo
+     */
+    @Autowired
+    public UserIntegrationTests(IUserRepo userRepo) {
         this.userRepo = userRepo;
     }
 
@@ -101,21 +98,23 @@ public class UserIntegrationTests {
     }
 
 
-    // /**
-    //  * Test fetching all users.
-    //  */
-    // @Test
-    // void getAll() {
-    //     ResponseEntity<Object> resp = this.userController.getAll();
-    //     Iterable<?> body = (ArrayList<?>)resp.getBody();
-    //     List<User> users = new ArrayList<>();
-    //     for (Object x : body) {
-    //         users.add((User) x);
-    //     }
-    //     assertEquals(users.get(0).getName(), this.dummyUsers.get(0).getName());
-    //     assertEquals(users.get(1).getName(), this.dummyUsers.get(1).getName());
-    //     assertEquals(users.get(2).getName(), this.dummyUsers.get(2).getName());
-    // }
+    /**
+     * Test fetching all users.
+     */
+    @Test
+    void getAll() throws Exception {
+        var users = this.dummyUsers;
+        // Setup request
+        var req = get("/api/users/all")
+                    .contentType("application/json");
+        // Perform test
+        this.mvc.perform(req)
+            .andExpect(jsonPath("[*].id").exists())
+            .andExpect(jsonPath("[0].name").value(users.get(0).getName()))
+            .andExpect(jsonPath("[1].name").value(users.get(1).getName()))
+            .andExpect(jsonPath("[2].name").value(users.get(2).getName()))
+            .andExpect(status().isOk());
+    }
 
 
     // /**
@@ -215,7 +214,6 @@ public class UserIntegrationTests {
         this.mvc.perform(req)
                 .andExpect(content().string(errMsg))
                 .andExpect(status().isBadRequest());
-
     }
 
 

@@ -21,7 +21,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @Transactional
-public interface IUserRepo extends JpaRepository<User, Long> {
+public interface UserRepo extends JpaRepository<User, Long> {
 
 
     /**

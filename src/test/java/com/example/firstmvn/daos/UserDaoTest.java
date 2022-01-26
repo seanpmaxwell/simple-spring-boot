@@ -7,7 +7,7 @@
 package com.example.firstmvn.daos;
 
 import com.example.firstmvn.entities.User;
-import com.example.firstmvn.repositories.IUserRepo;
+import com.example.firstmvn.repositories.UserRepo;
 import static com.example.firstmvn.daos.UserDao.getIdNotFoundMsg;
 import static com.example.firstmvn.daos.UserDao.getAlreadyPersistsMsg;
 import static com.example.firstmvn.daos.UserDao.getEmailAlreadyTakenMsg;
@@ -44,7 +44,7 @@ public class UserDaoTest {
     private UserDao userDao;
 
     @Mock
-    private IUserRepo userRepo;
+    private UserRepo userRepo;
 
 
     /**

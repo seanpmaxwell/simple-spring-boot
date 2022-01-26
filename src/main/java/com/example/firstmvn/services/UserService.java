@@ -13,7 +13,6 @@ import java.util.List;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
@@ -28,7 +27,6 @@ public class UserService {
      * 
      * @param userDao
      */
-    @Autowired
     public UserService(UserDao userDao) {
         this.userDao = userDao;
     }

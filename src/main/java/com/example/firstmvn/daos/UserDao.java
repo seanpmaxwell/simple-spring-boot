@@ -7,7 +7,7 @@
 package com.example.firstmvn.daos;
 
 import com.example.firstmvn.entities.User;
-import com.example.firstmvn.repositories.IUserRepo;
+import com.example.firstmvn.repositories.UserRepo;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +16,6 @@ import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 
@@ -30,7 +29,7 @@ public class UserDao {
     private static final String EMAIL_TAKEN_MSG_1 = "The email \"";
     private static final String EMAIL_TAKEN_MSG_2 = "\" has already been taken by another user.";
 
-    private final IUserRepo userRepo;
+    private final UserRepo userRepo;
 
 
     /**
@@ -38,8 +37,7 @@ public class UserDao {
      * 
      * @param userRepo
      */
-    @Autowired
-    public UserDao(IUserRepo userRepo) {
+    public UserDao(UserRepo userRepo) {
         this.userRepo = userRepo;
     }
     

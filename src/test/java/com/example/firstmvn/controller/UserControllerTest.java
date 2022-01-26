@@ -91,7 +91,7 @@ public class UserControllerTest {
         // Mock db call
         when(this.userService.getAll()).thenReturn(users);
         // Setup request
-        var req = get("/api/users/all")
+        var req = get("/api/users")
                     .contentType("application/json");
         // Perform test
         this.mvc.perform(req)

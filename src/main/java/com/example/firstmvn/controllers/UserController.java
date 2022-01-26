@@ -11,7 +11,6 @@ import com.example.firstmvn.services.UserService;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -41,7 +40,6 @@ public class UserController {
      * 
      * @param userService
      */
-    @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
     }
@@ -52,7 +50,7 @@ public class UserController {
      * 
      * @return
      */
-    @GetMapping("/all")
+    @GetMapping("")
     public ResponseEntity<Object> getAll() {
         List<User> users = this.userService.getAll();
         // pick up here wrap in object

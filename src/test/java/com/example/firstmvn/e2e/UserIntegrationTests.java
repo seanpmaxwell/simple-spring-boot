@@ -14,7 +14,7 @@ import java.util.Optional;
 import com.example.firstmvn.Main;
 import com.example.firstmvn.controllers.UserController;
 import com.example.firstmvn.entities.User;
-import com.example.firstmvn.repositories.IUserRepo;
+import com.example.firstmvn.repositories.UserRepo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import static com.example.firstmvn.daos.UserDao.getAlreadyPersistsMsg;
@@ -53,24 +53,23 @@ public class UserIntegrationTests {
     private final String DUMMY_EMAIL = "foo@bar.com";
     private final String DUMMY_NAME = "foo bar";
 
-    private final IUserRepo userRepo;
+    private final UserRepo userRepo;
+    private final MockMvc mvc;
 
     private List<User> dummyUsers;
     private User savedUser;
     private User unsavedUser;
 
-    @Autowired
-	private MockMvc mvc;
-
-    
+	
     /**
      * Constructor()
      * 
      * @param userRepo
      */
     @Autowired
-    public UserIntegrationTests(IUserRepo userRepo) {
+    public UserIntegrationTests(UserRepo userRepo, MockMvc mvc) {
         this.userRepo = userRepo;
+        this.mvc = mvc;
     }
 
 
@@ -105,7 +104,7 @@ public class UserIntegrationTests {
     void getAll() throws Exception {
         var users = this.dummyUsers;
         // Setup request
-        var req = get("/api/users/all")
+        var req = get("/api/users")
                     .contentType("application/json");
         // Perform test
         this.mvc.perform(req)
@@ -117,16 +116,20 @@ public class UserIntegrationTests {
     }
 
 
-    // /**
-    //  * Test getting one user by id.
-    //  */
-    // @Test
-    // void getOne() {
-    //     Long id = this.savedUser.getId();
-    //     ResponseEntity<Object> resp = this.userController.getOne(id);
-    //     User user = (User)resp.getBody();
-    //     assertEquals(user.getId(), this.savedUser.getId());
-    // }
+    /**
+     * Test getting one user by id.
+     */
+    @Test
+    void getOne() throws Exception {
+        // Setup req
+        var req = get("/api/users/" + this.savedUser.getId())
+                    .contentType("application/json");
+        // Test
+        this.mvc.perform(req)
+            .andExpect(jsonPath("$.id").value(this.savedUser.getId()))
+            .andExpect(jsonPath("$.name").value(this.savedUser.getName()))
+            .andExpect(status().isOk());
+    }
 
 
     // /**

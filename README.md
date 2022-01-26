@@ -35,3 +35,5 @@ This is simple project to show how to create a basic API using Java 11 + Maven +
 https://www.baeldung.com/spring-boot-testcontainers-integration-test
 
 - Integration tests need a web environment, not to call controllers methods directly
+- Get service unit-tests but get ride of all the others, it's overkill
+- https://www.testcontainers.org/modules/databases/postgres/

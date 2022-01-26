@@ -28,7 +28,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -39,10 +38,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.hamcrest.Matchers.containsString;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 @SpringBootTest(classes = Main.class)
@@ -56,7 +55,7 @@ public class UserIntegrationTests {
     private final UserRepo userRepo;
     private final MockMvc mvc;
 
-    private List<User> dummyUsers;
+    private List<User> savedUsers;
     private User savedUser;
     private User unsavedUser;
 
@@ -78,13 +77,13 @@ public class UserIntegrationTests {
      */
     @BeforeEach
     void setUp() {
-        this.dummyUsers = new ArrayList<User>();
-        this.dummyUsers.add(new User("sean@example.com", "sean maxwell"));
-        this.dummyUsers.add(new User("john@gmail.com", "john smith"));
-        this.dummyUsers.add(new User("jane@yahoo.com", "jane doe"));
-        this.userRepo.saveAll(this.dummyUsers);
-        this.savedUser = this.userRepo.findAll().get(0);
-        this.unsavedUser = new User("someone@exampl.com", "someone");
+        savedUsers = new ArrayList<User>();
+        savedUsers.add(new User("sean@example.com", "sean maxwell"));
+        savedUsers.add(new User("john@gmail.com", "john smith"));
+        savedUsers.add(new User("jane@yahoo.com", "jane doe"));
+        userRepo.saveAll(this.savedUsers);
+        savedUser = this.userRepo.findAll().get(0);
+        unsavedUser = new User("someone@exampl.com", "someone");
     }
 
 
@@ -93,7 +92,7 @@ public class UserIntegrationTests {
      */
     @AfterEach
     void cleanUp() {
-        this.userRepo.deleteAll();
+        userRepo.deleteAll();
     }
 
 
@@ -102,12 +101,12 @@ public class UserIntegrationTests {
      */
     @Test
     void getAll() throws Exception {
-        var users = this.dummyUsers;
+        var users = savedUsers;
         // Setup request
         var req = get("/api/users")
                     .contentType("application/json");
         // Perform test
-        this.mvc.perform(req)
+        mvc.perform(req)
             .andExpect(jsonPath("[*].id").exists())
             .andExpect(jsonPath("[0].name").value(users.get(0).getName()))
             .andExpect(jsonPath("[1].name").value(users.get(1).getName()))
@@ -122,78 +121,113 @@ public class UserIntegrationTests {
     @Test
     void getOne() throws Exception {
         // Setup req
-        var req = get("/api/users/" + this.savedUser.getId())
+        var req = get("/api/users/" + savedUser.getId())
                     .contentType("application/json");
         // Test
-        this.mvc.perform(req)
-            .andExpect(jsonPath("$.id").value(this.savedUser.getId()))
-            .andExpect(jsonPath("$.name").value(this.savedUser.getName()))
+        mvc.perform(req)
+            .andExpect(jsonPath("$.id").value(savedUser.getId()))
+            .andExpect(jsonPath("$.name").value(savedUser.getName()))
             .andExpect(status().isOk());
     }
 
 
-    // /**
-    //  * Test fetching one who's id is not found.
-    //  */
-    // @Test
-    // void getOne_idNotFound() {
-    //     Long id = Long.MAX_VALUE;
-    //     ResponseEntity<Object> resp = this.userController.getOne(id);
-    //     String body = (String)resp.getBody();
-    //     String msg = getIdNotFoundMsg(id);
-    //     assertTrue(body.contains(msg));
-    // }
+    /**
+     * Test fetching one who's id is not found.
+     */
+    @Test
+    void getOne_idNotFound() throws Exception {
+        Long id = Long.MAX_VALUE;
+        var errMsg = getIdNotFoundMsg(id);
+        // Setup req
+        var req = get("/api/users/" + id)
+                    .contentType("application/json");
+        // Perform test 
+        mvc.perform(req)
+            .andExpect(content().string(containsString(errMsg)))
+            .andExpect(status().isBadRequest());
+    }
 
 
-    // /**
-    //  * Test adding one user.
-    //  */
-    // @Test
-    // void addOne() {
-    //     this.userController.addOne(this.unsavedUser);
-    //     User res = this.userRepo.findByEmail(this.unsavedUser.getEmail());
-    //     assertEquals(this.unsavedUser.getEmail(), res.getEmail());
-    // }
+    /**
+     * Test adding one user.
+     */
+    @Test
+    void addOne() throws Exception {
+        // Setup dummy data
+        String content = asJsonString(unsavedUser);
+        // Setup request
+        var req = post("/api/users")
+                    .content(content)
+                    .contentType("application/json");
+        // Perform test
+        mvc.perform(req)
+            .andExpect(content().string(UserController.SUCCESSFUL_POST_MSG))
+            .andExpect(status().isOk());
+        // Test data in db
+        User res = userRepo.findByEmail(unsavedUser.getEmail());
+        assertEquals(unsavedUser.getEmail(), res.getEmail());
+    }
 
 
-    // /**
-    //  * Test reading creating and deleting users.
-    //  */
-    // @Test
-    // void addOne_alreadyPersistsErr() {
-    //     ResponseEntity<String> resp = this.userController.addOne(this.savedUser);
-    //     String body = (String)resp.getBody();
-    //     var errMsg = getAlreadyPersistsMsg(this.savedUser.getId(), this.savedUser.getEmail());
-    //     assertTrue(body.contains(errMsg));
-    // }
+    /**
+     * Test reading creating and deleting users.
+     */
+    @Test
+    void addOne_alreadyPersistsErr() throws Exception {
+        String content = asJsonString(savedUser);
+        var errMsg = getAlreadyPersistsMsg(savedUser.getId(), savedUser.getEmail());
+        // Setup request
+        var req = post("/api/users")
+                    .content(content)
+                    .contentType("application/json");
+        // Perform test 
+        mvc.perform(req)
+            .andExpect(content().string(containsString(errMsg)))
+            .andExpect(status().isBadRequest());
+    }
 
 
-    // /**
-    //  * Test updating one user.
-    //  */
-    // @Test
-    // void updateOne() {
-    //     User user = this.savedUser;
-    //     user.setEmail(this.DUMMY_EMAIL);
-    //     user.setName(this.DUMMY_NAME);
-    //     this.userController.updateOne(user);
-    //     Optional<User> res = this.userRepo.findById(this.savedUser.getId());
-    //     assertEquals(this.DUMMY_EMAIL, res.get().getEmail());
-    //     assertEquals(this.DUMMY_NAME, res.get().getName());
-    // }
+    /**
+     * Test updating one user.
+     */
+    @Test
+    void updateOne() throws Exception {
+        savedUser.setEmail(DUMMY_EMAIL);
+        savedUser.setName(DUMMY_NAME);
+        // Setup dummy data
+        String content = asJsonString(savedUser);
+        // Setup request
+        var req = put("/api/users")
+                    .content(content)
+                    .contentType("application/json");
+        // Perform test 
+        mvc.perform(req)
+            .andExpect(content().string(UserController.SUCCESSFUL_UPDATE_MSG))
+            .andExpect(status().isOk());
+        // Test data in db
+        Optional<User> res = userRepo.findById(savedUser.getId());
+        assertEquals(DUMMY_EMAIL, res.get().getEmail());
+        assertEquals(DUMMY_NAME, res.get().getName());
+    }
 
 
-    // /**
-    //  * Testing updating one id not found.
-    //  */
-    // @Test 
-    // void updateOne_idNotFound() {
-    //     User user = this.unsavedUser;
-    //     ResponseEntity<String> resp = this.userController.updateOne(user);
-    //     String body = (String)resp.getBody();
-    //     String msg = getIdNotFoundMsg(user.getId());
-    //     assertTrue(body.contains(msg));
-    // }
+    /**
+     * Testing updating one id not found.
+     */
+    @Test 
+    void updateOne_idNotFound() throws Exception {
+        // Setup dummy data
+        var content = asJsonString(unsavedUser);
+        var errMsg = getIdNotFoundMsg(unsavedUser.getId());
+        // Setup request
+        var req = put("/api/users")
+                    .content(content)
+                    .contentType("application/json");
+        // Perform test 
+        mvc.perform(req)
+            .andExpect(content().string(containsString(errMsg)))
+            .andExpect(status().isBadRequest());
+    }
 
 
     /**
@@ -202,47 +236,59 @@ public class UserIntegrationTests {
     @Test 
     void updateOne_emailTaken() throws Exception {
         // Setup dummy data
-        String newEmail = this.dummyUsers.get(1).getEmail();
-        User user = this.savedUser;
-        user.setEmail(newEmail);
-        var content = this.asJsonString(user);
-        // Throw Error
+        String newEmail = savedUsers.get(1).getEmail();
+        savedUser.setEmail(newEmail);
+        var content = asJsonString(savedUser);
+        // Err msg
         var errMsg = getEmailAlreadyTakenMsg(newEmail);
-        // var exception = new RuntimeException(errMsg);
         // Setup request
         var req = put("/api/users")
                     .content(content)
                     .contentType("application/json");
         // Perform test 
-        this.mvc.perform(req)
-                .andExpect(content().string(errMsg))
-                .andExpect(status().isBadRequest());
+        mvc.perform(req)
+            .andExpect(content().string(containsString(errMsg)))
+            .andExpect(status().isBadRequest());
     }
 
 
-    // /**
-    //  * Testing delete one.
-    //  */
-    // @Test 
-    // void deleteOne() {
-    //     Long id = this.savedUser.getId();
-    //     this.userController.deleteOne(id);
-    //     Optional<User> user = this.userRepo.findById(id);
-    //     assertFalse(user.isPresent());
-    // }
+    /**
+     * Testing delete one.
+     */
+    @Test 
+    void deleteOne() throws Exception {
+        // Setup dummy data
+        Long id = savedUser.getId();
+        // Setup request
+        var req = delete("/api/users/" + id)
+                    .contentType("application/json");
+        // Perform test 
+        mvc.perform(req)
+            .andExpect(content().string(UserController.SUCCESSFUL_DELETE_MSG))
+            .andExpect(status().isOk());
+        // Test data in db
+        Optional<User> user = userRepo.findById(id);
+        assertFalse(user.isPresent());
+    }
 
 
-    // /**
-    //  * Testing delete one.
-    //  */
-    // @Test 
-    // void deleteOne_idNotFound() {
-    //     User user = this.unsavedUser;
-    //     ResponseEntity<String> resp = this.userController.deleteOne(user.getId());
-    //     String body = (String)resp.getBody();
-    //     String msg = getIdNotFoundMsg(user.getId());
-    //     assertTrue(body.contains(msg));
-    // }
+    /**
+     * Testing delete one.
+     */
+    @Test 
+    void deleteOne_idNotFound() throws Exception {
+        // Setup dummy data
+        Long id = unsavedUser.getId();
+        // Throw Error
+        var errMsg = getIdNotFoundMsg(id);
+        // Setup request
+        var req = delete("/api/users/" + id)
+                    .contentType("application/json");
+        // Perform test 
+        this.mvc.perform(req)
+                .andExpect(content().string(containsString(errMsg)))
+                .andExpect(status().isBadRequest());
+    }
 
 
     /**

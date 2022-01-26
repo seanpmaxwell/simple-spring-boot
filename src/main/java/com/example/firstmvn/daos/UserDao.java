@@ -66,6 +66,8 @@ public class UserDao {
             String msg = UserDao.getIdNotFoundMsg(id);
             throw new EntityNotFoundException(msg);
         }
+
+        // return resp.get().orElseThrow(() -> new EntityNotFoundException(msg, HttpStatus.BAD_REQUEST));
     }
 
 

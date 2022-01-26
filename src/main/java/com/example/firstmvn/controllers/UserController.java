@@ -52,7 +52,7 @@ public class UserController {
      */
     @GetMapping("")
     public ResponseEntity<Object> getAll() {
-        List<User> users = this.userService.getAll();
+        List<User> users = userService.getAll();
         // pick up here wrap in object
         return new ResponseEntity<Object>(users, HttpStatus.OK);
     }
@@ -66,7 +66,7 @@ public class UserController {
      */
     @GetMapping("{id}")
     public ResponseEntity<Object> getOne(@PathVariable Long id) {
-        User user = this.userService.getOne(id);
+        User user = userService.getOne(id);
         return new ResponseEntity<Object>(user, HttpStatus.OK);
     }
 
@@ -80,7 +80,7 @@ public class UserController {
     @PostMapping("")
     @ResponseBody
     public ResponseEntity<String> addOne(@RequestBody User user) {
-        this.userService.addOne(user);
+        userService.addOne(user);
         return new ResponseEntity<String>(SUCCESSFUL_POST_MSG, HttpStatus.OK);
     }
 
@@ -94,7 +94,7 @@ public class UserController {
     @PutMapping("")
     @ResponseBody
     public ResponseEntity<String> updateOne(@RequestBody User user) {
-        this.userService.updateOne(user);
+        userService.updateOne(user);
         return new ResponseEntity<String>(SUCCESSFUL_UPDATE_MSG, HttpStatus.OK);
     }
 
@@ -108,7 +108,7 @@ public class UserController {
     @DeleteMapping("/{id}")
     @ResponseBody
     public ResponseEntity<String> deleteOne(@PathVariable Long id) {
-        this.userService.deleteOne(id);
+        userService.deleteOne(id);
         return new ResponseEntity<String>(SUCCESSFUL_DELETE_MSG, HttpStatus.OK);
     }
 }

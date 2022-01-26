@@ -38,7 +38,7 @@ public class UserService {
      * @return
      */
     public List<User> getAll() {
-        return this.userDao.getAll();
+        return userDao.getAll();
     }
 
 
@@ -49,7 +49,7 @@ public class UserService {
      * @return
      */
     public User getOne(Long id) throws EntityNotFoundException {
-        return this.userDao.getOne(id);
+        return userDao.getOne(id);
     }
 
 
@@ -60,7 +60,7 @@ public class UserService {
      * @throws EntityExistsException
      */
     public void addOne(User user) throws EntityExistsException {
-        this.userDao.addOne(user);
+        userDao.addOne(user);
     }
 
 
@@ -70,7 +70,7 @@ public class UserService {
      * @param user
      */
     public void updateOne(User user) throws RuntimeException {
-        this.userDao.updateOne(user);
+        userDao.updateOne(user);
     }
 
 
@@ -80,6 +80,6 @@ public class UserService {
      * @param id
      */
     public void deleteOne(Long id) throws EntityNotFoundException {
-        this.userDao.deleteOne(id);
+        userDao.deleteOne(id);
     }
 }

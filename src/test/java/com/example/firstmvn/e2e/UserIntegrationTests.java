@@ -82,7 +82,7 @@ public class UserIntegrationTests {
         savedUsers.add(new User("john@gmail.com", "john smith"));
         savedUsers.add(new User("jane@yahoo.com", "jane doe"));
         userRepo.saveAll(this.savedUsers);
-        savedUser = this.userRepo.findAll().get(0);
+        savedUser = userRepo.findAll().get(0);
         unsavedUser = new User("someone@exampl.com", "someone");
     }
 
@@ -164,8 +164,8 @@ public class UserIntegrationTests {
             .andExpect(content().string(UserController.SUCCESSFUL_POST_MSG))
             .andExpect(status().isOk());
         // Test data in db
-        User res = userRepo.findByEmail(unsavedUser.getEmail());
-        assertEquals(unsavedUser.getEmail(), res.getEmail());
+        User user = userRepo.findByEmail(unsavedUser.getEmail());
+        assertEquals(unsavedUser.getEmail(), user.getEmail());
     }
 
 
@@ -285,9 +285,9 @@ public class UserIntegrationTests {
         var req = delete("/api/users/" + id)
                     .contentType("application/json");
         // Perform test 
-        this.mvc.perform(req)
-                .andExpect(content().string(containsString(errMsg)))
-                .andExpect(status().isBadRequest());
+        mvc.perform(req)
+            .andExpect(content().string(containsString(errMsg)))
+            .andExpect(status().isBadRequest());
     }
 
 

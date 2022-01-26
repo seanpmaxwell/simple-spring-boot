@@ -48,7 +48,7 @@ public class UserDao {
      * @return
      */
     public List<User> getAll() {
-        return this.userRepo.findAll();
+        return userRepo.findAll();
     }
 
 
@@ -59,15 +59,11 @@ public class UserDao {
      * @return
      */
     public User getOne(Long id) {
-        Optional<User> resp = this.userRepo.findById(id);
-        if (resp.isPresent()) {
-            return resp.get();
-        } else {
+        Optional<User> resp = userRepo.findById(id);
+        return resp.orElseThrow(() -> {
             String msg = UserDao.getIdNotFoundMsg(id);
-            throw new EntityNotFoundException(msg);
-        }
-
-        // return resp.get().orElseThrow(() -> new EntityNotFoundException(msg, HttpStatus.BAD_REQUEST));
+            return new EntityNotFoundException(msg);
+        });
     }
 
 
@@ -77,14 +73,13 @@ public class UserDao {
      * @param user
      */
     public void addOne(User user) {
-        // Check if id exists
-        List<User> users = this.userRepo.findByIdOrEmail(user.getId(), user.getEmail());
-        if (users.size() > 0) {
+        User resp = userRepo.findByIdOrEmail(user.getId(), user.getEmail());
+        if (resp != null) {
             String msg = UserDao.getAlreadyPersistsMsg(user.getId(), user.getEmail());
             throw new EntityExistsException(msg);
-        }
+        };
         // Do db query
-        this.userRepo.save(user);
+        userRepo.save(user);
     }
 
 
@@ -95,19 +90,19 @@ public class UserDao {
      */
     public void updateOne(User user) {
         // Check id not found
-        Optional<User> resp = this.userRepo.findById(user.getId());
-        if (!resp.isPresent()) {
+        Optional<User> resp = userRepo.findById(user.getId());
+        resp.orElseThrow(() -> {
             String msg = UserDao.getIdNotFoundMsg(user.getId());
             throw new EntityNotFoundException(msg);
-        }
+        });
         // Check email already persists
-        User userWithEmail = this.userRepo.findByEmail(user.getEmail());
+        User userWithEmail = userRepo.findByEmail(user.getEmail());
         if (userWithEmail != null && userWithEmail.getId() != user.getId()) {
             String msg = UserDao.getEmailAlreadyTakenMsg(user.getEmail());
             throw new RuntimeException(msg);
         }
         // Update user
-        this.userRepo.updateOne(user.getId(), user.getEmail(), user.getName(), user.getPwdHash());
+        userRepo.updateOne(user.getId(), user.getEmail(), user.getName(), user.getPwdHash());
     }
 
 
@@ -118,13 +113,13 @@ public class UserDao {
      */
     public void deleteOne(Long id) {
         // Check id not found
-        Optional<User> resp = this.userRepo.findById(id);
+        Optional<User> resp =userRepo.findById(id);
         if (!resp.isPresent()) {
             String msg = UserDao.getIdNotFoundMsg(id);
             throw new EntityNotFoundException(msg);
         }
         // Delete by id
-        this.userRepo.deleteById(id);
+        userRepo.deleteById(id);
     }
 
 

@@ -7,8 +7,6 @@
 
 package com.example.firstmvn.repositories;
 
-import java.util.List;
-
 import javax.transaction.Transactional;
 
 import com.example.firstmvn.entities.User;
@@ -31,7 +29,7 @@ public interface UserRepo extends JpaRepository<User, Long> {
      * @param email
      * @return
      */
-    List<User> findByIdOrEmail(Long id, String email);
+    User findByIdOrEmail(Long id, String email);
 
 
     /**

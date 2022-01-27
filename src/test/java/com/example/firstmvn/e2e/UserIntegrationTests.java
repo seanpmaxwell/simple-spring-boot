@@ -45,8 +45,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 
 @SpringBootTest(classes = Main.class)
-@ContextConfiguration(classes = {ServletWebServerApplicationContext.class})
 @AutoConfigureMockMvc
+@ContextConfiguration(classes = {ServletWebServerApplicationContext.class})
 public class UserIntegrationTests {
 
     private final String DUMMY_EMAIL = "foo@bar.com";
@@ -81,7 +81,7 @@ public class UserIntegrationTests {
         savedUsers.add(new User("sean@example.com", "sean maxwell"));
         savedUsers.add(new User("john@gmail.com", "john smith"));
         savedUsers.add(new User("jane@yahoo.com", "jane doe"));
-        userRepo.saveAll(this.savedUsers);
+        userRepo.saveAll(savedUsers);
         savedUser = userRepo.findAll().get(0);
         unsavedUser = new User("someone@exampl.com", "someone");
     }

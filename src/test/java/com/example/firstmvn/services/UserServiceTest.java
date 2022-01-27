@@ -53,11 +53,11 @@ public class UserServiceTest {
      */
     @BeforeEach
     public void setUp() {
-        this.dummyUser = new User(5L, "sean");
-        this.dummyUsers = new ArrayList<User>();
-        this.dummyUsers.add(new User("Sean maxwell"));
-        this.dummyUsers.add(new User("Arnold Schwarzenegger"));
-        this.dummyUsers.add(new User("Sylvestor Stalone"));
+        dummyUser = new User(5L, "sean");
+        dummyUsers = new ArrayList<User>();
+        dummyUsers.add(new User("Sean maxwell"));
+        dummyUsers.add(new User("Arnold Schwarzenegger"));
+        dummyUsers.add(new User("Sylvestor Stalone"));
     }
     
 
@@ -69,9 +69,9 @@ public class UserServiceTest {
     @Test
     void getAll() throws Exception {
         // Mock db call
-        when(this.userDao.getAll()).thenReturn(this.dummyUsers);
-        var resp = this.userService.getAll();
-        assertEquals(this.dummyUsers, resp);
+        when(userDao.getAll()).thenReturn(dummyUsers);
+        var resp = userService.getAll();
+        assertEquals(dummyUsers, resp);
     }
 
 
@@ -82,10 +82,10 @@ public class UserServiceTest {
      */
     @Test
     void getOne() throws Exception {
-        Long id = this.dummyUser.getId();
-        when(this.userDao.getOne(id)).thenReturn(this.dummyUser);
-        var resp = this.userService.getOne(id);
-        assertEquals(this.dummyUser, resp);
+        Long id = dummyUser.getId();
+        when(userDao.getOne(id)).thenReturn(dummyUser);
+        var resp = userService.getOne(id);
+        assertEquals(dummyUser, resp);
     }
 
 
@@ -96,13 +96,13 @@ public class UserServiceTest {
      */
     @Test 
     void getOne_idNotFound() throws Exception {
-        Long id = this.dummyUser.getId();
+        Long id = dummyUser.getId();
         // Setup exception
         var errMsg = getIdNotFoundMsg(id);
         var exception = new EntityNotFoundException(errMsg);
-        doThrow(exception).when(this.userDao).getOne(id);
+        doThrow(exception).when(userDao).getOne(id);
         // Do test
-        var ex = assertThrows(EntityNotFoundException.class, () -> this.userService.getOne(id));
+        var ex = assertThrows(EntityNotFoundException.class, () -> userService.getOne(id));
         assertEquals(ex.getMessage(), errMsg);
     }
 
@@ -114,9 +114,9 @@ public class UserServiceTest {
      */
     @Test
     void addOne() throws Exception {
-        doNothing().when(this.userDao).addOne(this.dummyUser);
-        userService.addOne(this.dummyUser);
-        verify(this.userDao, times(1)).addOne(this.dummyUser);
+        doNothing().when(userDao).addOne(dummyUser);
+        userService.addOne(dummyUser);
+        verify(userDao, times(1)).addOne(dummyUser);
     }
 
 
@@ -127,13 +127,13 @@ public class UserServiceTest {
      */
     @Test
     void addOne_idOrEmailTaken() throws Exception {
-        var user = this.dummyUser;
+        var user = dummyUser;
         // Setup exception
         var errMsg = getAlreadyPersistsMsg(user.getId(), user.getEmail());
         var exception = new EntityExistsException(errMsg);
-        doThrow(exception).when(this.userDao).addOne(user);
+        doThrow(exception).when(userDao).addOne(user);
         // Do test
-        var ex = assertThrows(EntityExistsException.class, () -> this.userService.addOne(user));
+        var ex = assertThrows(EntityExistsException.class, () -> userService.addOne(user));
         assertEquals(ex.getMessage(), errMsg);
     }
 
@@ -145,9 +145,9 @@ public class UserServiceTest {
      */
     @Test
     void updateOne() throws Exception {
-        doNothing().when(this.userDao).updateOne(this.dummyUser);
-        userService.updateOne(this.dummyUser);
-        verify(this.userDao, times(1)).updateOne(this.dummyUser);
+        doNothing().when(userDao).updateOne(dummyUser);
+        userService.updateOne(dummyUser);
+        verify(userDao, times(1)).updateOne(dummyUser);
     }
 
 
@@ -159,12 +159,12 @@ public class UserServiceTest {
     @Test
     void updateOne_idNotFound() throws Exception {
         // Setup exception
-        var errMsg = getIdNotFoundMsg(this.dummyUser.getId());
+        var errMsg = getIdNotFoundMsg(dummyUser.getId());
         var exception = new EntityNotFoundException(errMsg);
-        doThrow(exception).when(this.userDao).updateOne(this.dummyUser);
+        doThrow(exception).when(userDao).updateOne(dummyUser);
         // Do test
         var ex = assertThrows(EntityNotFoundException.class, () -> 
-            this.userService.updateOne(this.dummyUser));
+            userService.updateOne(dummyUser));
         assertEquals(ex.getMessage(), errMsg);
     }
 
@@ -177,12 +177,12 @@ public class UserServiceTest {
     @Test
     void updateOne_emailTaken() throws Exception {
         // Setup exception
-        var errMsg = getEmailAlreadyTakenMsg(this.dummyUser.getEmail());
+        var errMsg = getEmailAlreadyTakenMsg(dummyUser.getEmail());
         var exception = new RuntimeException(errMsg);
-        doThrow(exception).when(this.userDao).updateOne(this.dummyUser);
+        doThrow(exception).when(userDao).updateOne(dummyUser);
         // Do test
         var ex = assertThrows(RuntimeException.class, () -> 
-            this.userService.updateOne(this.dummyUser));
+            userService.updateOne(dummyUser));
         assertEquals(ex.getMessage(), errMsg);
     }
 
@@ -194,9 +194,9 @@ public class UserServiceTest {
      */
     @Test
     void deleteOne() throws Exception {
-        doNothing().when(this.userDao).deleteOne(this.dummyUser.getId());
-        userService.deleteOne(this.dummyUser.getId());
-        verify(this.userDao, times(1)).deleteOne(this.dummyUser.getId());
+        doNothing().when(userDao).deleteOne(dummyUser.getId());
+        userService.deleteOne(dummyUser.getId());
+        verify(userDao, times(1)).deleteOne(dummyUser.getId());
     }
 
 
@@ -208,12 +208,12 @@ public class UserServiceTest {
     @Test
     void deleteOne_idNotFound() throws Exception {
         // Setup exception
-        var errMsg = getIdNotFoundMsg(this.dummyUser.getId());
+        var errMsg = getIdNotFoundMsg(dummyUser.getId());
         var exception = new EntityNotFoundException(errMsg);
-        doThrow(exception).when(this.userDao).deleteOne(this.dummyUser.getId());
+        doThrow(exception).when(userDao).deleteOne(dummyUser.getId());
         // Do test
         var ex = assertThrows(EntityNotFoundException.class, () -> 
-            this.userService.deleteOne(this.dummyUser.getId()));
+            userService.deleteOne(dummyUser.getId()));
         assertEquals(ex.getMessage(), errMsg);
     }
 }

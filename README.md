@@ -30,9 +30,5 @@ This is simple project to show how to create a basic API using Java 11 + Maven +
 - Controller (@RestController) -> Service (@Service) -> Dao (@Repository) -> Repo (@Repository) -> Entity (@Component)
 
 
-#### Todo (maybe)
-- Maybe setup testContainers for creating a test database.
-https://www.baeldung.com/spring-boot-testcontainers-integration-test
-
-- Integration tests need a web environment, not to call controllers methods directly
-- https://www.testcontainers.org/modules/databases/postgres/
+#### Link to Reddit post
+- https://www.reddit.com/r/java/comments/sb46mc/example_project_for_setting_up_spring_boot_with/

@@ -1,3 +1,9 @@
+/**
+ * Handle errors from the controller.
+ * 
+ * created by Sean Maxwell, 1/16/2022
+ */
+
 package com.example.firstmvn.other;
 
 import org.slf4j.Logger;

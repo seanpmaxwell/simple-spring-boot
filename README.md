@@ -32,3 +32,8 @@ This is simple project to show how to create a basic API using Java 11 + Maven +
 
 #### Link to Reddit post
 - https://www.reddit.com/r/java/comments/sb46mc/example_project_for_setting_up_spring_boot_with/
+
+
+#### Some tips for real world projects (this is just a simple project)
+- Controller advise should account for each type of error
+- Response should returns JSONs (can return JSONs using `Map<String, Object> body = new LinkedHashMap<>();`) not strings.
